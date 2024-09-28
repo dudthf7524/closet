@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/mypage.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://code.jquery.com/jquery-3.6.3.js"
+            integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+            crossorigin="anonymous">
+    </script>
+    <style>
+        #mypage{
+            float: left;
+        }
+
+        input{
+            padding-top: 15px;
+            padding-bottom: 5px;
+            border-width: 0 0 1px;
+            transition: border-bottom-color 0.3s;
+            width: 400px;
+            border-bottom-color:rgb(233, 233, 233);
+        }
+
+        input[type="text"]:focus{
+            outline: none;
+            border-bottom-color: black;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+        input[type="password"]:focus{
+            outline: none;
+            border-bottom-color: black;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+        h3{
+
+        }
+        #logininformation .content{
+            text-decoration: none;
+            color: grey;
+            font-size: small;
+        }
+
+        #logininformation button{
+            background-color: white;
+            border: 1px solid;
+            border-color: rgb(233, 233, 233);
+            padding: 6px;
+            border-radius: 10px;
+        }
+        #idbutton {
+            cursor: pointer;
+        }
+
+        #passwordbutton {
+            cursor: pointer;
+        }
+
+        .contentchagne {
+            text-decoration: none;
+            color: black;
+            font-size: small;
+            font-weight: bold;
+        }
+        .changebutton{
+           width: 100px;
+           height: 50px;
+
+        }
+        #changenamebutton{
+
+            width: 400px;
+            height: 50px;
+            text-align: center;
+        }
+        #changepasswordbutton{
+
+           width: 400px;
+           height: 50px;
+           text-align: center;
+       }
+    </style>
+</head>
+<body>
+
+<div style="width: 1280px; margin: auto">
+
+<div th:replace="~{.common/main.html :: menu}"></div>
+<div th:replace="~{.common/main.html :: kream}"></div>
+<div th:replace="~{.common/main.html :: mypage}"></div>
+
+<div id="logininformation">
+    <table style="padding-left: 100px; padding-top: 25px;">
+        <tr>
+            <td>
+                <h2>로그인 정보</h2>
+                <div style="background-color: black; width: 1000px; height: 2px;" ></div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height: 50px;"></td>
+        </tr>
+        <tr>
+            <td>
+                <h4>내 계정</h4><br>
+                <span class="content">아이디</span><br>
+                <input type="text" readonly th:value="${member.memberid}">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="password-section">
+                    <span class="content">비밀번호</span><br>
+                    <input type="password" th:value="${member.memberpassword}"><button id="passwordbutton">변경</button>
+                </div>
+
+                <div id="password-change-form" style="display: none;">
+                    <form name="savePasswordForm">
+                        <input type="hidden" name="id" th:value="${member.id}">
+                        <span class="contentchagne">비밀번호 변경</span><br><br>
+                        <span class="contentchagne" id="memberPasswordField">이전 비밀번호</span><br>
+                        <input type="password" id="memberpassword" name="memberpassword" onkeyup="passwordCheck()" placeholder="8~20자의 영문, 숫자, 특수문자를 조합하여 입력해주세요."><br>
+                        <span id = "check-result-password"></span>
+                        <br><br>
+                        <span class="contentchagne" id="memberNewPasswordField">새 비밀번호</span><br>
+                        <input type="password" id="membernewpassword" name="membernewpassword" onkeyup="newPasswordCheck()"><br>
+                        <span id = "check-result-newpassword"></span>
+                        <br><br>
+                        <div id="changepasswordbutton">
+                            <button class="changebutton" type="button" id="cancel-password-button">취소</button>
+                            <button class="changebutton" type="button" id="savePasswordButton" onclick="savePassword();">저장</button>
+                        </div>
+                        <br>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="name-section">
+                    <span class="content">이름</span><br>
+                    <input type="text" th:value = "${member.membername}"><button id="namebutton">변경</button>
+                </div>
+
+                <div id="name-change-form" style="display: none;">
+                    <form name="saveNameForm">
+                        <input type="hidden" name="id" th:value="${member.id}">
+                        <span class="contentchagne" id="memberNameField">변경할 이름</span><br>
+                        <input id="membername" name="membername" type="text" onkeyup="nameCheck()"><br><br>
+                        <span id = "check-result-name"></span>
+                        <div id="changenamebutton">
+                            <button class="changebutton" type="button" id="cancel-name-button">취소</button>
+                            <button class="changebutton" type="submit" id="saveNameButton" onclick="saveName();">저장</button>
+                        </div>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="height: 50px;"></td>
+        </tr>
+        <tr>
+            <td>
+                <a href="/member/delete" class="content">회원탈퇴</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
+
+<script>
+        document.getElementById('passwordbutton').addEventListener('click', function () {
+            document.getElementById('password-section').style.display = 'none';
+            document.getElementById('password-change-form').style.display = 'block';
+        });
+
+        document.getElementById('cancel-password-button').addEventListener('click', function () {
+            document.getElementById('password-section').style.display = 'block';
+            document.getElementById('password-change-form').style.display = 'none';
+        });
+
+        document.getElementById('namebutton').addEventListener('click', function () {
+            document.getElementById('name-section').style.display = 'none';
+            document.getElementById('name-change-form').style.display = 'block';
+        });
+
+        document.getElementById('cancel-name-button').addEventListener('click', function () {
+            document.getElementById('name-section').style.display = 'block';
+            document.getElementById('name-change-form').style.display = 'none';
+        });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+    const passwordInput = document.getElementById("memberpassword");
+    const newPasswordInput = document.getElementById("membernewpassword");
+    const savePasswordButton = document.getElementById("savePasswordButton");
+
+    // 유효성 검사 함수
+    const validateInputs = () => {
+        const password = passwordInput.value;
+        const newPassword = newPasswordInput.value;
+
+
+
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,16}$/;
+        const passwordValid = passwordRegex.test(password);
+
+        const newPasswordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,16}$/;
+        const newPasswordValid = newPasswordRegex.test(newPassword);
+
+
+        if (passwordValid && newPasswordValid) {
+            savePasswordButton.style.backgroundColor = "black";
+            savePasswordButton.style.color = "white";
+            savePasswordButton.style.cursor = "pointer";
+            savePasswordButton.disabled = false; // 버튼 활성화
+        } else {
+            savePasswordButton.style.backgroundColor = "rgb(233, 233, 233)";
+            savePasswordButton.style.color = "white";
+            savePasswordButton.style.cursor = "default";
+            savePasswordButton.disabled = true; // 버튼 비활성화
+        }
+    };
+
+     // 초기 상태로 버튼 비활성화
+    validateInputs();
+
+    // 각 입력 필드에 입력될 때마다 유효성 검사 수행
+
+    passwordInput.addEventListener('keyup', validateInputs);
+    newPasswordInput.addEventListener('keyup', validateInputs);
+
+    savePasswordButton.addEventListener('click', function(event) {
+        if (savePasswordButton.disabled) {
+            event.preventDefault(); // 버튼이 비활성화된 경우 join() 함수 실행 막기
+            return;
+        }
+        savePassword(); // 버튼이 활성화된 경우에만 join() 함수 실행
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+
+
+    const nameInput = document.getElementById("membername");
+    const saveNameButton = document.getElementById("saveNameButton");
+
+    // 유효성 검사 함수
+    const validateInputs = () => {
+        const name = nameInput.value;
+
+        const nameRegex = /^[가-힣]{1,10}$/;
+        const nameValid = nameRegex.test(name);
+
+
+        if (nameValid) {
+            saveNameButton.style.backgroundColor = "black";
+            saveNameButton.style.color = "white";
+            saveNameButton.style.cursor = "pointer";
+            saveNameButton.disabled = false; // 버튼 활성화
+        } else {
+            saveNameButton.style.backgroundColor = "rgb(233, 233, 233)";
+            saveNameButton.style.color = "white";
+            saveNameButton.style.cursor = "default";
+            saveNameButton.disabled = true; // 버튼 비활성화
+        }
+    };
+
+     // 초기 상태로 버튼 비활성화
+    validateInputs();
+
+    // 각 입력 필드에 입력될 때마다 유효성 검사 수행
+
+    nameInput.addEventListener('keyup', validateInputs);
+
+    saveNameButton.addEventListener('click', function(event) {
+        if (saveNameButton.disabled) {
+            event.preventDefault(); // 버튼이 비활성화된 경우 join() 함수 실행 막기
+            return;
+        }
+        saveName(); // 버튼이 활성화된 경우에만 join() 함수 실행
+    });
+});
+
+        const passwordCheck = () => {
+            const password = document.getElementById("memberpassword").value;
+            const checkResult = document.getElementById("check-result-password");
+            const memberPasswordField = document.getElementById("memberPasswordField");
+
+        console.log("입력값 : ",password);
+        $.ajax({
+            //요청방식 : post, url : "password-check", 데이터 : 패스워드
+            type : "post",
+            url : "/member/password-check",
+            data : {
+                "memberpassword" : password
+            },
+            success : function(res){
+                console.log("요청성공", res);
+                if(res =="ok") {
+                    console.log("사용가능한 이메일");
+                    checkResult.style.color="green"
+                    memberPasswordField.style.color ="black"
+                    checkResult.innerHTML=""
+                }else{
+                    console.log("이미 사용중인 이메일");
+                    checkResult.style.color="red"
+                    checkResult.style.fontSize="12px";
+                    memberPasswordField.style.color ="red"
+                    checkResult.innerHTML=res
+                }
+            },
+            error : function(err){
+                console.log("에러발생", err);
+            }
+        });
+    }
+
+
+    const newPasswordCheck = () => {
+            const password = document.getElementById("membernewpassword").value;
+            const checkResult = document.getElementById("check-result-newpassword");
+            const memberPasswordField = document.getElementById("memberNewPasswordField");
+
+        console.log("입력값 : ",password);
+        $.ajax({
+            //요청방식 : post, url : "password-check", 데이터 : 패스워드
+            type : "post",
+            url : "/member/password-check",
+            data : {
+                "memberpassword" : password
+            },
+            success : function(res){
+                console.log("요청성공", res);
+                if(res =="ok") {
+                    console.log("사용가능한 이메일");
+                    checkResult.style.color="green"
+                    memberPasswordField.style.color ="black"
+                    checkResult.innerHTML=""
+                }else{
+                    console.log("이미 사용중인 이메일");
+                    checkResult.style.color="red"
+                    checkResult.style.fontSize="12px";
+                    memberPasswordField.style.color ="red"
+                    checkResult.innerHTML=res
+                }
+            },
+            error : function(err){
+                console.log("에러발생", err);
+            }
+        });
+    }
+
+     const nameCheck = () => {
+        const name = document.getElementById("membername").value;
+        const checkResult = document.getElementById("check-result-name");
+        const memberNameField = document.getElementById("memberNameField");
+
+        console.log("입력값 : ",name);
+        $.ajax({
+            //요청방식 : post, url : "name-check", 데이터 : 이메일
+            type : "post",
+            url : "/member/name-check",
+            data : {
+                "membername" : name
+            },
+            success : function(res){
+                console.log("요청성공", res);
+                if(res =="ok") {
+                    console.log("사용가능한 이메일");
+                    memberNameField.style.color ="black"
+                    checkResult.innerHTML=""
+                }else{
+                    console.log("이미 사용중인 이메일");
+                    checkResult.style.color="red"
+                    checkResult.style.fontSize="12px";
+                    memberNameField.style.color ="red"
+                    checkResult.innerHTML=res
+                }
+            },
+            error : function(err){
+                console.log("에러발생", err);
+            }
+        });
+    }
+
+    function savePassword(){
+        document.savePasswordForm.action = "/member/saveChangePassword";
+        document.savePasswordForm.method = "post";
+        document.savePasswordForm.submit();
+    }
+
+    function saveName(){
+        document.saveNameForm.action = "/member/saveChangeName";
+        document.saveNameForm.method = "post";
+        document.saveNameForm.submit();
+    }
+    </script>
+</body>
+</html>

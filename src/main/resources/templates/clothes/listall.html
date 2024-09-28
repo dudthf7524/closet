@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/nav.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://kit.fontawesome.com/577d3f36ff.js"
+            crossorigin="anonymous">
+    </script>
+    <style>
+        /* 스타일 정의 */
+        .form-wrapper {
+            display: flex;
+            align-items: end; /* 세로 정렬 */
+            justify-content: center;
+            gap: 30px; /* 이미지와 입력 폼 간격 */
+            padding: 20px;
+        }
+         .list {
+            overflow-y: auto; /* 세로 스크롤바 */
+            overflow-x: auto; /* 가로 스크롤바 추가 */
+            width: 100%;
+            height: 500px;
+            max-width: 1000px; /* 가로 스크롤바가 나타날 최대 너비 설정 */
+            padding: 10px;
+            border: 1px solid #ddd; /* 외곽선 추가 */
+            border-radius: 5px;
+            background-color: #f9f9f9; /* 배경색 추가 */
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed; /* 테이블 레이아웃을 고정 */
+            border-collapse: collapse; /* 셀 경계선 병합 */
+        }
+
+        th, td {
+            width: 150px; /* 각 셀의 고정 너비 설정 */
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd; /* 하단 경계선 */
+        }
+
+        th {
+            background-color: #f0f0f0; /* 헤더 배경색 */
+            font-weight: bold; /* 헤더 텍스트 굵게 */
+        }
+
+        tr:hover {
+            background-color: #f5f5f5; /* 마우스를 올렸을 때 행의 배경색 변경 */
+        }
+
+        .table-container {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        h1{
+            background-color: white;
+            text-align: center;
+        }
+        .modal {
+          display: none; /* 처음에는 보이지 않음 */
+          position: fixed;
+          z-index: 1;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          background-color: rgba(0, 0, 0, 0.4);
+          padding-top: 60px;
+        }
+        .modal_body {
+          background-color: #fefefe;
+          margin: 5% auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 400px; /* 이미지의 크기에 맞게 조정 */
+          display: flex;
+          flex-direction: column;
+          align-items: center; /* 중앙 정렬 */
+          position: relative; /* 자식 요소의 위치 조정을 위해 추가 */
+        }
+        .btn-open-modal{
+            cursor : pointer;
+        }
+        .image {
+            max-width: 300px;
+            max-height: 300px;
+        }
+        .modal_body p {
+            text-align: center; /* name과 price 중앙 정렬 */
+            text-weight : bold;
+        }
+
+        .close_btn {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background-color: red; /* 배경색 빨강 */
+          color: white; /* 글자색 하얀색 */
+          border: none;
+          padding: 5px 10px;
+          cursor: pointer;
+          font-size: 16px;
+          border-radius: 3px;
+          z-index: 10; /* 버튼이 다른 요소 위에 표시되도록 */
+        }
+        #sum{
+            text-align: end;
+            font-size: large;
+            font-weight: bold;
+            padding-right: 150px;
+        }
+        .search-box{
+        height: 50px;
+        width: 200px;
+        background-color: white;
+        border-radius: 40px;
+        padding: 10px;
+        border: 1px solid #f9deec;
+        }
+        .search-txt{
+            border: none;
+            background: none;
+            outline: none;
+            float: left;
+            padding: 0px;
+            color: #797979;
+            font-size: 16px;
+            line-height: 30px;
+            width: 100px;
+        }
+        .search-btn{
+            color: #f9deec;
+            float: right;
+            width: 40px;
+            height: 100%;
+            border-radius: 50%;
+            background-color: white;
+            border: none;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .search-btn:hover{
+            cursor: pointer;
+        }
+        .search{
+            width: 20%;
+            height: 500px;
+            padding: 10px;
+
+        }
+    </style>
+</head>
+<body>
+<div style="width: 1280px; margin: auto">
+    <div th:replace="~{.common/main.html :: menu}"></div>
+    <div th:replace="~{.common/main.html :: kream}"></div>
+    <div th:replace="~{.common/main.html :: nav}"></div>
+
+    <div class="form-wrapper">
+        <div class="search">
+            <form class="search-box" action="/clothes/listall" method="get">
+                <input name="name" class="search-txt" type="text" placeholder="검색" th:value="${name}">
+                <button class="search-btn" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="list">
+            <h1>ALL</h1>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>구입일</th>
+                    <th>카테고리</th>
+                    <th>제품명</th>
+                    <th>가격</th>
+                    <th>구매처</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="clothes: ${clothesEntityList}">
+                    <td th:text="${clothes.no}"></td>
+                    <td th:text="${clothes.buydate}"></td>
+                    <td th:text="${clothes.categoryName.categoryName}"></td>
+                    <!-- 각 버튼에 data-id 속성 추가 -->
+                    <td th:text="${clothes.name}" class="btn-open-modal" th:attr="data-id=${clothes.id}"></td>
+                    <td th:text="${clothes.commaprice}"></td>
+                    <td th:text="${clothes.purchaseplace}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+
+    </div>
+    <div id="sum">
+        합계 : <span th:text="${sum}"></span>원 /
+        개수 : <span th:text="${count}"></span>개
+    </div>
+</div>
+
+<div class="modal">
+    <div class="modal_body">
+    </div>
+</div>
+
+<script>
+  const modal = document.querySelector('.modal');
+  const modalBody = document.querySelector('.modal_body');
+  const btnOpenModals = document.querySelectorAll('.btn-open-modal'); // 모든 모달 버튼 선택
+
+  window.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+
+  btnOpenModals.forEach((btnOpenModal) => {
+    btnOpenModal.addEventListener("click", () => {
+      // 클릭된 버튼의 data-id 속성 값 가져오기
+      const id = btnOpenModal.getAttribute('data-id');
+
+      // 해당 id를 사용하여 요청 전송
+      fetch(`/clothes/detail?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+          const img = data.img;
+          const name = data.name;
+          const price = data.price;
+          const id = data.id;
+          const categorycode = data.categorycode;
+          // 모달 내용 설정
+           modalBody.innerHTML = `
+              <button type="button" class="close_btn">X</button>
+              <br>
+              <img id="image" class="image" src="${img}" alt="Image Preview">
+              <p>${name}</p>
+              <p>${price}</p>
+              <a href="/clothes/edit/${id}/${categorycode}">✏️</a>
+                <span onclick="fetch('/clothes/delete/${id}', { method : 'DELETE' })
+                .then(r => r.text())
+                .then(() => {
+                    location.reload();
+                })
+            ">🗑️</span>
+            `;
+
+          // 모달 창 띄우기
+          modal.style.display = "block";
+
+          // 닫기 버튼 이벤트 리스너 추가 (모달 내용이 렌더링된 후)
+            const closeBtn = document.querySelector('.close_btn');
+            closeBtn.addEventListener('click', function() {
+              modal.style.display = 'none';
+          });
+        })
+        .catch(error => {
+          console.error("Error fetching financial data:", error);
+          modalBody.innerHTML = "<p>데이터를 가져오는 중 오류가 발생했습니다.</p>";
+          modal.style.display = "block";
+        });
+    });
+  });
+
+  // 마우스 호버 이벤트 처리
+  const containers = document.querySelectorAll('.container');
+  containers.forEach(container => {
+    const categoryBox = container.querySelector('.category-box');
+    container.addEventListener('mouseenter', () => {
+      categoryBox.classList.add('show'); // ITEM이나 CATEGORY에 마우스를 올리면 리스트 보이기
+    });
+    container.addEventListener('mouseleave', () => {
+      categoryBox.classList.remove('show'); // ITEM과 CATEGORY 모두에서 마우스가 나가면 숨기기
+    });
+  });
+</script>
+
+
+</body>
+</html>

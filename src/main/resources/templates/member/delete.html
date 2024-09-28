@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/mypage.css">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script
+          src="https://code.jquery.com/jquery-3.6.3.js"
+          integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+          crossorigin="anonymous">
+  </script>
+  <style>
+        #mypage{
+            float: left;
+        }
+
+        input{
+            padding-top: 15px;
+            padding-bottom: 5px;
+            border-width: 0 0 1px;
+            transition: border-bottom-color 0.3s;
+            width: 400px;
+            border-bottom-color:rgb(233, 233, 233);
+        }
+
+        input[type="text"]:focus{
+            outline: none;
+            border-bottom-color: black;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+        input[type="password"]:focus{
+            outline: none;
+            border-bottom-color: black;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+
+        #logininformation .content{
+            text-decoration: none;
+            color: grey;
+            font-size: small;
+        }
+
+        #logininformation button{
+            background-color: white;
+            border: 1px solid;
+            border-color: rgb(233, 233, 233);
+            padding: 6px;
+            border-radius: 10px;
+        }
+        #idbutton {
+            cursor: pointer;
+        }
+
+        #passwordbutton {
+            cursor: pointer;
+        }
+
+        .contentchagne {
+            text-decoration: none;
+            color: black;
+            font-size: small;
+            font-weight: bold;
+        }
+
+        .deletebutton{
+            width: 400px;
+            height: 50px;
+
+        }
+        #deleteAouthMemberButton{
+            width: 400px;
+            height: 50px;
+            background-color: white;
+            color : black
+            border: 1px solid;
+            border-color: rgb(233, 233, 233);
+            padding: 6px;
+            border-radius: 10px;
+            font-weight : bold
+        }
+    </style>
+</head>
+<body>
+
+<div style="width: 1280px; margin: auto">
+
+  <div th:replace="~{.common/main.html :: menu}"></div>
+  <div th:replace="~{.common/main.html :: kream}"></div>
+  <div th:replace="~{.common/main.html :: mypage}"></div>
+
+  <div id="logininformation">
+    <table style="padding-left: 100px; padding-top: 25px;">
+      <tr>
+        <td>
+          <h2>회원탈퇴</h2>
+          <div style="background-color: black; width: 1000px; height: 2px;" ></div>
+        </td>
+      </tr>
+      <tr>
+        <td style="height: 50px;"></td>
+      </tr>
+      <tr>
+        <td>
+
+            <div th:if="${option == 'session'}">
+              <form name="memberDeleteForm">
+                <h4>회원탈퇴를 진행하시려면 비밀번호를 입력해주세요</h4><br>
+                <span class="content" id="memberPasswordField">비밀번호</span><br>
+                <input id="memberpassword" name="memberpassword" type="password" onkeyup="passwordCheck();"><br>
+                <span id = "check-result-password"></span>
+                <br><br>
+                <button class="deletebutton" type="button" id="deleteMemberButton" onclick="deleteMember();">회원탈퇴</button>
+              </form>
+            </div>
+
+            <div th:if="${option == 'oauth'}">
+              <form name="memberDeleteForm">
+                <button type="button" id="deleteAouthMemberButton" onclick="deleteMember();">회원탈퇴</button>
+              </form>
+            </div>
+
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+    const passwordInput = document.getElementById("memberpassword");
+    const deleteMemberButton = document.getElementById("deleteMemberButton");
+
+    // 유효성 검사 함수
+    const validateInputs = () => {
+        const password = passwordInput.value;
+
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,16}$/;
+        const passwordValid = passwordRegex.test(password);
+
+        if (passwordValid) {
+            deleteMemberButton.style.backgroundColor = "black";
+            deleteMemberButton.style.color = "white";
+            deleteMemberButton.style.cursor = "pointer";
+            deleteMemberButton.disabled = false; // 버튼 활성화
+        } else {
+            deleteMemberButton.style.backgroundColor = "rgb(233, 233, 233)";
+            deleteMemberButton.style.color = "white";
+            deleteMemberButton.style.cursor = "default";
+            deleteMemberButton.disabled = true; // 버튼 비활성화
+        }
+    };
+
+     // 초기 상태로 버튼 비활성화
+    validateInputs();
+
+    // 각 입력 필드에 입력될 때마다 유효성 검사 수행
+
+    passwordInput.addEventListener('keyup', validateInputs);
+
+    deleteMemberButton.addEventListener('click', function(event) {
+        if (deleteMemberButton.disabled) {
+            event.preventDefault(); // 버튼이 비활성화된 경우 join() 함수 실행 막기
+            return;
+        }
+        deleteMember(); // 버튼이 활성화된 경우에만 join() 함수 실행
+    });
+});
+
+
+
+        const passwordCheck = () => {
+            const password = document.getElementById("memberpassword").value;
+            const checkResult = document.getElementById("check-result-password");
+            const memberPasswordField = document.getElementById("memberPasswordField");
+
+        console.log("입력값 : ",password);
+        $.ajax({
+            //요청방식 : post, url : "password-check", 데이터 : 패스워드
+            type : "post",
+            url : "/member/password-check",
+            data : {
+                "memberpassword" : password
+            },
+            success : function(res){
+                console.log("요청성공", res);
+                if(res =="ok") {
+                    console.log("사용가능한 이메일");
+                    checkResult.style.color="green"
+                    memberPasswordField.style.color ="black"
+                    checkResult.innerHTML=""
+                }else{
+                    console.log("이미 사용중인 이메일");
+                    checkResult.style.color="red"
+                    checkResult.style.fontSize="12px";
+                    memberPasswordField.style.color ="red"
+                    checkResult.innerHTML=res
+                }
+            },
+            error : function(err){
+                console.log("에러발생", err);
+            }
+        });
+    }
+
+    function deleteMember(){
+        document.memberDeleteForm.action = "/member/delete";
+        document.memberDeleteForm.method = "post";
+        document.memberDeleteForm.submit();
+    }
+
+    </script>
+</body>
+</html>

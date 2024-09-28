@@ -1,0 +1,54 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+#menu ul {
+    margin: 0;
+    text-align: right;
+}
+
+#menu li {
+    list-style: none;
+    padding: 5px 10px;
+    display: inline-block;
+}
+
+#menu a {
+    text-decoration: none;
+    color: grey;
+    font-size: small;
+}
+
+#kream span {
+    font-size: 30px;
+    font-weight: bold;
+    font-style: italic;
+    float: left;
+    padding-left: 40px;
+}
+
+#kream ul {
+    margin: 0;
+    text-align: right;
+}
+
+#kream li {
+    list-style: none;
+    padding: 15px 25px;
+    display: inline-block;
+
+}
+
+#kream a {
+    text-decoration: none;
+    color: black;
+}
+
+#kream #home {
+    font-weight: bold;
+}
+

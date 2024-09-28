@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/main.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.6.3.js"
+            integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+            crossorigin="anonymous">
+    </script>
+    <style>
+        input{
+            padding-top: 15px;
+            padding-bottom: 5px;
+            border-width: 0 0 1px;
+            transition: border-bottom-color 0.3s;
+            width: 400px;
+            border-bottom-color:rgb(233, 233, 233);
+        }
+        input[type="text"]:focus{
+            outline: none;
+            border-bottom-color: black;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+        input::placeholder{
+            color: rgb(175, 175, 175);
+        }
+
+        #loginbutton{
+            width: 400px;
+            height: 52px;
+            background-color: rgb(233, 233, 233);
+            color: white;
+            border-radius: 10px;
+            border-style: none;
+
+        }
+        .field{
+            font-size: 12px;
+            font-weight: bolder;
+        }
+            /* 공통 스타일 */
+        .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            margin: 10px 0;
+            width: 400px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            position: relative;
+
+        }
+
+        .logo {
+            height: 30px;
+            position: absolute;
+            left: 10px; /* 로고를 왼쪽에 고정 */
+        }
+
+        .text {
+            flex-grow: 1; /* 텍스트가 버튼 안에서 중앙에 위치 */
+            text-align: center;
+        }
+
+        /* 네이버 로그인 버튼 스타일 */
+        #naver-login-btn {
+            background-color: white;
+            color: #000000;
+            border: 1px solid rgb(218, 218, 218);
+        }
+
+        /* 애플 로그인 버튼 스타일 */
+        #apple-login-btn {
+            background-color: white;
+            color: #000000;
+            border: 1px solid rgb(218, 218, 218);
+        }
+        #kakao-login-btn{
+            background-color: white;
+            color: #000000;
+            border: 1px solid rgb(218, 218, 218);
+        }
+    </style>
+</head>
+<body>
+<div style="width: 1280px; margin: auto">
+<div th:replace="~{.common/main.html :: menu}"></div>
+<div th:replace="~{.common/main.html :: kream}"></div>
+<div class="loginForm">
+    <form name = "loginForm">
+        <table align="center">
+            <tr>
+                <td style="height: 50px;">
+
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <h2>CLOSET</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="height: 50px;"></td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="field" id="memberIdField">아이디*</span><br>
+                    <input name="memberid" id="memberid" type="text" onkeyup="emailCheck()" class="custom-input" placeholder = "8~20자의 영문 소문자, 숫자">
+                    <br>
+                    <span id = "check-result"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="height: 50px;"></td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="field" id="memberPasswordField">비밀번호*</span><br>
+                    <input name="memberpassword" id="memberpassword" type="password" onkeyup="passwordCheck()" class="custom-input" placeholder = "영문, 숫자, 특수문자 조합 8-16자">
+                    <br>
+                    <span id = "check-result-password"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="height: 50px;"></td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="button" id="loginbutton" onclick="login();">로그인</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="/oauth2/authorization/naver" class="login-btn" id="naver-login-btn">
+                        <img src="/image/btnW.png" alt="네이버 로고" class="logo">
+                        <span class="text">네이버로 로그인</span>
+                    </a>
+                    <a href="/oauth2/authorization/kakao" class="login-btn" id="kakao-login-btn">
+                        <img src="/image/kakao.png" alt="카카오 로고" class="logo">
+                        <span class="text">카카오로 로그인</span>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <span id="fail" th:text="${fail}"></span>
+</div>
+</div>
+
+</body>
+</html>
+
+<script>
+     function login(){
+        document.loginForm.action = "/member/login";
+        document.loginForm.method = "post";
+        document.loginForm.submit();
+    }
+
+    const fail = document.getElementById("fail").innerHTML;
+    if(!fail == ''){
+        swal('로그인 실패',fail,'error');
+        document.getElementById("fail").innerHTML='';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const emailInput = document.getElementById("memberid");
+    const passwordInput = document.getElementById("memberpassword");
+    const loginButton = document.getElementById("loginbutton");
+
+    // 유효성 검사 함수
+    const validateInputs = () => {
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        const emailRegex = /^(?=.*[a-z])(?=.*\d)[a-z0-9]{8,20}$/;
+        const emailValid = emailRegex.test(email);
+
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,16}$/;
+        const passwordValid = passwordRegex.test(password);
+
+        if (emailValid && passwordValid) {
+            loginButton.style.backgroundColor = "black";
+            loginButton.style.color = "white";
+            loginButton.style.cursor = "pointer";
+            loginButton.disabled = false; // 버튼 활성화
+        } else {
+            loginButton.style.backgroundColor = "rgb(233, 233, 233)";
+            loginButton.style.color = "white";
+            loginButton.style.cursor = "default";
+            loginButton.disabled = true; // 버튼 비활성화
+        }
+    };
+
+     // 초기 상태로 버튼 비활성화
+    validateInputs();
+
+    // 각 입력 필드에 입력될 때마다 유효성 검사 수행
+    emailInput.addEventListener('keyup', validateInputs);
+    passwordInput.addEventListener('keyup', validateInputs);
+
+    loginButton.addEventListener('click', function(event) {
+        if (loginButton.disabled) {
+            event.preventDefault(); // 버튼이 비활성화된 경우 join() 함수 실행 막기
+            return;
+        }
+        login(); // 버튼이 활성화된 경우에만 join() 함수 실행
+    });
+});
+
+    const emailCheck = () => {
+        const email = document.getElementById("memberid").value;
+        const checkResult = document.getElementById("check-result");
+        const memberIdField = document.getElementById("memberIdField");
+
+        console.log("입력값 : ",email);
+        $.ajax({
+            //요청방식 : post, url : "email-check-login", 데이터 : 이메일
+            type : "post",
+            url : "/member/email-check-login",
+            data : {
+                "memberid" : email
+            },
+            success : function(res){
+                console.log("요청성공", res);
+                if(res =="ok") {
+                    console.log("사용가능한 이메일");
+                    memberIdField.style.color ="black"
+                    checkResult.innerHTML=""
+                }else{
+                    console.log("이미 사용중인 이메일");
+                    checkResult.style.color="red"
+                    checkResult.style.fontSize="12px";
+                    memberIdField.style.color ="red"
+                    checkResult.innerHTML=res
+                }
+            },
+            error : function(err){
+                console.log("에러발생", err);
+            }
+        });
+    }
+
+    const passwordCheck = () => {
+        const password = document.getElementById("memberpassword").value;
+        const checkResult = document.getElementById("check-result-password");
+        const memberPasswordField = document.getElementById("memberPasswordField");
+
+        console.log("입력값 : ",password);
+        $.ajax({
+            //요청방식 : post, url : "password-check", 데이터 : 패스워드
+            type : "post",
+            url : "/member/password-check",
+            data : {
+                "memberpassword" : password
+            },
+            success : function(res){
+                console.log("요청성공", res);
+                if(res =="ok") {
+                    console.log("사용가능한 이메일");
+                    checkResult.style.color="green"
+                    memberPasswordField.style.color ="black"
+                    checkResult.innerHTML=""
+                }else{
+                    console.log("이미 사용중인 이메일");
+                    checkResult.style.color="red"
+                    checkResult.style.fontSize="12px";
+                    memberPasswordField.style.color ="red"
+                    checkResult.innerHTML=res
+                }
+            },
+            error : function(err){
+                console.log("에러발생", err);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.querySelector('.custom-input');
+
+        input.addEventListener('focus', function() {
+            this.placeholder = ''; /* 입력 박스를 클릭했을 때 placeholder 내용을 제거 */
+        });
+
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+            this.placeholder = '예) kream@kream.co.kr'; /* 입력 내용이 없을 때 placeholder 복원 */
+            }
+        });
+    });
+
+
+</script>

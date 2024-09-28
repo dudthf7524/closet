@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<link rel="stylesheet" href="/main/main.css" type="text/css" />
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="menu" th:fragment="menu">
+
+    <ul sec:authorize="isAnonymous()">
+        <li>
+            <a href="/announcement/list?page=1">고객센터</a>
+        </li>
+        <li>
+            <a href="/member/join">회원가입</a>
+        </li>
+        <li>
+            <a href="/member/login">로그인</a>
+        </li>
+    </ul>
+
+    <ul sec:authorize="isAuthenticated()">
+        <li>
+            <a href="/announcement/list?page=1">고객센터</a>
+        </li>
+        <li>
+            <a href="/member/mypage">마이페이지</a>
+        </li>
+        <span th:if="${#authentication.principal.role == 'ADMIN'}">
+            <li>
+            <a href="/manager">관리자페이지</a>
+            </li>
+        </span>
+
+        <li>
+            <a href="/member/logout">로그아웃</a>
+        </li>
+    </ul>
+
+</div>
+
+<div id="kream" th:fragment="kream">
+
+    <span><a href="/">closet</a></span>
+
+    <ul>
+        <li id="home">
+            <a href="/">HOME</a>
+        </li>
+        <li>
+            <a href="/clothes/list/1">STYLE</a>
+        </li>
+    </ul>
+</div>
+
+<div class="wrapper" th:fragment="nav">
+    <div class="container">
+        <div class="item" id="item1">ITEM</div>
+        <div class="category-box" id="category-box1">
+            <ul class="category" id="category1">
+                <li>
+                    <a href="/clothes/insert/1">HAT</a>
+                </li>
+                <li>
+                    <a href="/clothes/insert/2">OUTER</a>
+                </li>
+                <li>
+                    <a href="/clothes/insert/3">TOP</a>
+                </li>
+                <li>
+                    <a href="/clothes/insert/4">SHIRT</a>
+                </li>
+                <li>
+                    <a href="/clothes/insert/5">BOTTOM</a>
+                </li>
+                <li>
+                    <a href="/clothes/insert/6">SHOES</a>
+                </li>
+                <li>
+                    <a href="/clothes/insert/7">ACC</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="item" id="item2">LIST</div>
+        <div class="category-box" id="category-box2">
+            <ul class="category" id="category2">
+                <li>
+                    <a href="/clothes/list/1">HAT</a>
+                </li>
+                <li>
+                    <a href="/clothes/list/2">OUTER</a>
+                </li>
+                <li>
+                    <a href="/clothes/list/3">TOP</a>
+                </li>
+                <li>
+                    <a href="/clothes/list/4">SHIRT</a>
+                </li>
+                <li>
+                    <a href="/clothes/list/5">BOTTOM</a>
+                </li>
+                <li>
+                    <a href="/clothes/list/6">SHOES</a>
+                </li>
+                <li>
+                    <a href="/clothes/list/7">ACC</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="item" id="item3"><a href="/clothes/listall">ALL</a></div>
+        <div class="category-box" id="category-box3">
+            <ul class="category" id="category3">
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="mypage" th:fragment="mypage">
+
+    <div th:if="${option == 'announcement'}">
+        <ul>
+            <li class="title1"><h2>고객센터</h2></li>
+        </ul>
+        <ul>
+            <li class="content"><a href="">공지사항</a></li>
+        </ul>
+    </div>
+
+    <div th:if="${option == 'mypage'}">
+        <ul>
+            <li class="title1"><h3>마이 페이지</h3></li>
+        </ul>
+
+        <ul>
+            <li class="title2"><h4>내 정보</h4></li>
+            <li class="content">로그인 정보</li>
+        </ul>
+        <br>
+    </div>
+
+    <div th:if="${option == 'manager'}">
+        <ul>
+            <li class="title1"><h3>관리자</h3></li>
+        </ul>
+        <a href=""></a>
+        <ul>
+            <li class="title2"><h4>회원관리</h4></li>
+            <li class="content" ><span id="memberList"><a href="/manager/member/list">회원목록</a></span></li>
+        </ul>
+
+        <ul>
+            <li class="title2"><h4>공지사항</h4></li>
+            <li class="content" id="announcementList"> <a href="/manager/announcement/list?page=1">A목록</a></li>
+            <li class="content" id="announcementWrite"> <a href="/manager/announcement/write">A작성</a></li>
+        </ul>
+
+    </div>
+</div>
+
+</body>
+</html>

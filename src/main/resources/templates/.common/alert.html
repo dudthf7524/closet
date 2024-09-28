@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>알림창</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+<input type="hidden" id="message" th:value="${messageDTO.message}">
+<input type="hidden" id="alert" th:value="${messageDTO.alert}">
+<input type="hidden" id="uri" th:value="${messageDTO.redirectUri}">
+
+
+<script>
+    const message = document.getElementById("message").value;
+    const alert = document.getElementById("alert").value;  // 리다이렉트 URI 처리
+    const redirectUri = document.getElementById("uri").value;
+    if (message) {
+
+        swal(alert, message, 'error').then(() => {
+            // 사용자가 확인 버튼을 누르면 리다이렉트 처리
+            if (redirectUri) {
+                window.location.href = redirectUri;
+            }
+        });
+    }
+</script>
+</body>
+</html>
