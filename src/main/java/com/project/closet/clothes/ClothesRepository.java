@@ -17,4 +17,5 @@ public interface ClothesRepository extends JpaRepository<ClothesEntity, Long> {
     List<ClothesEntity> findByMemberNoWithCategoryOrderByCategorycodeAsc(@Param("memberNo") Long memberNo);
 
     List<ClothesEntity> findByNameContainsAndMemberNo(String name, Long memberNoMethod);
+
 }

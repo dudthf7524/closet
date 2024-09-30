@@ -108,6 +108,8 @@
     <div class="form-container">
       <h1>공지사항 상세보기</h1>
       <form name="announcementWriteForm">
+        <input name = "page" type="hidden" th:value = "${page}">
+        <input name = "abc" type="hidden" th:value = "${title}">
         <div class="form-group">
           <label for="title">제목</label>
           <input type="text" id="title" name="announcementTitle" placeholder="제목을 입력하세요" th:value="${announcement.announcementTitle}" readonly>
@@ -128,11 +130,16 @@
 <script>
 
     function announcementEdit(){
-         location.href = "/manager/announcement/edit/" + [[${announcement.id}]];
+         location.href = "/manager/announcement/edit/" + [[${announcement.id}]]+ "?page=" + page;
     }
-    function announcementDelete(){
-        location.href = "/manager/announcement/delete/" + [[${announcement.id}]];
+
+    var page = document.announcementWriteForm.page.value;
+    var abc = document.announcementWriteForm.abc.value;
+
+    function announcementDelete() {
+        location.href = "/manager/announcement/delete/" + [[${announcement.id}]] + "?page=" + page + "&title=" + abc;
     }
+
 </script>
 
 </body>

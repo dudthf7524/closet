@@ -43,7 +43,7 @@ public class ClothesController {
         model.addAttribute("category", category);
         model.addAttribute("categorycode", categorycode);
 
-        return "/clothes/insert";
+        return "clothes/insert";
     }
 
     @GetMapping("/presigned-url")
@@ -63,25 +63,25 @@ public class ClothesController {
             messageDTO.setAlert("작성 실패");
             messageDTO.setRedirectUri("/clothes/insert/"+clothesEntity.getCategorycode());
             model.addAttribute("messageDTO", messageDTO);
-            return "/.common/alert";
+            return ".common/alert";
         }else if(clothesEntity.getPrice() == null || clothesEntity.getPrice().equals("")){
             messageDTO.setMessage("가격을 다시 입력해주세요");
             messageDTO.setAlert("작성 실패");
             messageDTO.setRedirectUri("/clothes/insert/"+clothesEntity.getCategorycode());
             model.addAttribute("messageDTO", messageDTO);
-            return "/.common/alert";
+            return ".common/alert";
         }else if(clothesEntity.getPurchaseplace() == null || clothesEntity.getPurchaseplace().equals("")){
             messageDTO.setMessage("구매처를 다시 입력해주세요");
             messageDTO.setAlert("작성 실패");
             messageDTO.setRedirectUri("/clothes/insert/"+clothesEntity.getCategorycode());
             model.addAttribute("messageDTO", messageDTO);
-            return "/.common/alert";
+            return ".common/alert";
         }else if(clothesEntity.getBuydate() == null || clothesEntity.getBuydate().equals("")){
             messageDTO.setMessage("날짜를 다시 입력해주세요");
             messageDTO.setAlert("작성 실패");
             messageDTO.setRedirectUri("/clothes/insert/"+clothesEntity.getCategorycode());
             model.addAttribute("messageDTO", messageDTO);
-            return "/.common/alert";
+            return ".common/alert";
         }
 
 
@@ -102,7 +102,7 @@ public class ClothesController {
             messageDTO.setAlert("인증 실패");
             messageDTO.setRedirectUri("/member/login");
             model.addAttribute("messageDTO", messageDTO);
-            return "/.common/alert";
+            return ".common/alert";
         }
 
 
@@ -135,7 +135,7 @@ public class ClothesController {
 
 
 
-        return "/clothes/list";
+        return "clothes/list";
     }
 
     @GetMapping("/detail")
@@ -188,7 +188,7 @@ public class ClothesController {
 
         model.addAttribute("clothes", clothes);
 
-        return "/clothes/edit";
+        return "clothes/edit";
     }
 
     @PostMapping("/edit")
@@ -252,6 +252,6 @@ public class ClothesController {
         model.addAttribute("sum", sumcomma);
         model.addAttribute("count", count);
         model.addAttribute("name", name);
-        return "/clothes/listall";
+        return "clothes/listall";
     }
 }

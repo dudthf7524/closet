@@ -64,7 +64,7 @@ public class AnnouncementController {
         model.addAttribute("totalPages", totalPages); // 총 페이지 수
         model.addAttribute("currentPage", currentPage); // 현재 페이지
         model.addAttribute("title", title);
-        return "/announcement/list";
+        return "announcement/list";
     }
 
     @GetMapping("/detail/{id}")
@@ -79,7 +79,7 @@ public class AnnouncementController {
         model.addAttribute("option", option[0]);
         model.addAttribute("announcement", announcementEntity);
 
-        return "/announcement/detail";
+        return "announcement/detail";
     }
 
 

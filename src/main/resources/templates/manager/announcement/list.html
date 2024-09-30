@@ -159,12 +159,11 @@
                 <tbody>
                 <tr th:each="announcement: ${announcementEntityList}">
                     <td id="writeDate" th:text="${announcement.writeDate}"></td>
-                    <td id="announcementTitle" ><a th:href="@{/manager/announcement/detail/{id}(id=${announcement.id})}" th:text="${announcement.announcementTitle}"></a></td>
+                    <td id="announcementTitle" ><a th:href="@{/manager/announcement/detail/{id}(id=${announcement.id}, page=${currentPage}, title=${title})}" th:text="${announcement.announcementTitle}"></a></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
         <div class="pagination-modern">
             <!-- 이전 5 페이지 링크 -->
             <a th:href="@{/manager/announcement/list(page=${currentPage > 5 ? currentPage - 5 : 1}, announcementTitle=${title})}"

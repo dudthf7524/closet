@@ -108,6 +108,7 @@
             <h1>공지사항 수정</h1>
             <form name="announcementEditForm">
                 <input type="hidden" name="id" th:value="${announcement.id}">
+                <input type="hidden" name="page" th:value="${page}">
                 <div class="form-group">
                     <label for="title">제목</label>
                     <input type="text" id="title" name="announcementTitle" placeholder="제목을 입력하세요" th:value="${announcement.announcementTitle}" >

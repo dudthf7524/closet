@@ -29,12 +29,13 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
 
+
     @GetMapping("/member/join")
     public String join() {
 
         LocalDateTime.now();
         System.out.println(LocalDateTime.now());
-        return "/member/join";
+        return "member/join";
 
     }
 
@@ -52,12 +53,12 @@ public class MemberController {
             memberEntity.setRole(MemberRole.USER);
             memberService.save(memberEntity);
 
-            return "/member/login";
+            return "member/login";
         }
 
     @GetMapping("/member/login")
     public String login() {
-        return "/member/login";
+        return "member/login";
     }
 
     @PostMapping("/member/login")
@@ -65,7 +66,7 @@ public class MemberController {
 
 
 
-        return "/member/login";
+        return "member/login";
     }
 
 
@@ -133,7 +134,7 @@ public class MemberController {
     public String loginError(Model model) {
         String fail = "아이디 또는 비밀번호를 확인해주세요";
         model.addAttribute("fail", fail);
-        return "/member/login";
+        return "member/login";
     }
 
     @GetMapping("/member/mypage")
@@ -160,7 +161,7 @@ public class MemberController {
 
         model.addAttribute("option", option[1]);
         model.addAttribute("member", member);
-        return "/member/mypage";
+        return "member/mypage";
     }
 
 
@@ -173,7 +174,7 @@ public class MemberController {
 
         model.addAttribute("messageDTO", messageDTO);
 
-        return "/.common/alert";
+        return ".common/alert";
     }
 
     @PostMapping("/member/saveChangePassword")
@@ -199,7 +200,7 @@ public class MemberController {
 
                 model.addAttribute("messageDTO", messageDTO);
 
-                return "/.common/alert";
+                return ".common/alert";
             }else{
                 var hash = passwordEncoder.encode(membernewpassword);
                 memberService.updateMemberPassword(id, hash);
@@ -209,7 +210,7 @@ public class MemberController {
                     new SecurityContextLogoutHandler().logout(request, response, auth);
                 }
 
-                return "/member/login";
+                return "member/login";
             }
         }else{
             messageDTO.setMessage("이전 비밀번호가 다릅니다.");
@@ -218,7 +219,7 @@ public class MemberController {
 
             model.addAttribute("messageDTO", messageDTO);
 
-            return "/.common/alert";
+            return ".common/alert";
         }
 
     }
@@ -245,7 +246,7 @@ public class MemberController {
         System.out.println(option);
         model.addAttribute("option", option);
 
-        return "/member/delete";
+        return "member/delete";
     }
 
 
@@ -285,9 +286,9 @@ public class MemberController {
                         messageDTO.setRedirectUri("/member/login");
 
                         model.addAttribute("messageDTO", messageDTO);
-                        return "/.common/alert";
+                        return ".common/alert";
                     } else {
-                        return "/member/delete"; // 비밀번호 불일치 시 다시 탈퇴 페이지로
+                        return "member/delete"; // 비밀번호 불일치 시 다시 탈퇴 페이지로
                     }
                 } else {
                     // 회원 정보가 없을 경우 예외 처리
@@ -312,7 +313,7 @@ public class MemberController {
                 messageDTO.setRedirectUri("/member/login");
 
                 model.addAttribute("messageDTO", messageDTO);
-                return "/.common/alert";
+                return ".common/alert";
             } else {
                 return "redirect:/error"; // 예상치 못한 타입의 principal이 반환될 경우
             }

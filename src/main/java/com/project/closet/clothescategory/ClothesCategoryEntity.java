@@ -14,7 +14,6 @@ import java.util.List;
 @Table(name = "clothesCategory")
 public class ClothesCategoryEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categorycode;
 
     @Column(nullable = false)
@@ -23,4 +22,5 @@ public class ClothesCategoryEntity {
     @ToString.Exclude
     @OneToMany(mappedBy = "categoryName")
     private List<ClothesEntity> clothes = new ArrayList<>();
+
 }
