@@ -1,0 +1,26 @@
+#mypage li {
+    list-style: none;
+    padding: 10px;
+}
+#mypage .title1 {
+    font-size: large;
+}
+#mypage .title2 {
+    font-size: large;
+}
+
+.content a {
+    color: grey;
+    text-decoration: none;
+    font-size: small;
+
+}
+/* 선택된 페이지의 스타일 */
+.active {
+    color: black !important;
+    font-weight: bold;
+    font-size: 14px;
+}
+a{
+    text-decoration: none;
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/mypage.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        #mypage{
+            float: left;
+        }
+
+        input{
+            padding-top: 15px;
+            padding-bottom: 5px;
+            border-width: 0 0 1px;
+            transition: border-bottom-color 0.3s;
+            width: 400px;
+            border-bottom-color:rgb(233, 233, 233);
+        }
+
+        input[type="text"]:focus{
+            outline: none;
+            border-bottom-color: black;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+        input[type="password"]:focus{
+            outline: none;
+            border-bottom-color: black;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+        h3{
+
+        }
+        #logininformation .content{
+            text-decoration: none;
+            color: grey;
+            font-size: small;
+        }
+
+        #logininformation button{
+            background-color: white;
+            border: 1px solid;
+            border-color: rgb(233, 233, 233);
+            padding: 6px;
+            border-radius: 10px;
+        }
+        #idbutton {
+            cursor: pointer;
+        }
+
+        #passwordbutton {
+            cursor: pointer;
+        }
+
+        .contentchagne {
+            text-decoration: none;
+            color: black;
+            font-size: small;
+            font-weight: bold;
+        }
+        .changebutton{
+           width: 100px;
+           height: 50px;
+
+        }
+        #changenamebutton{
+
+            width: 400px;
+            height: 50px;
+            text-align: center;
+        }
+        #changepasswordbutton{
+
+           width: 400px;
+           height: 50px;
+           text-align: center;
+       }
+    </style>
+</head>
+<body>
+
+<div style="width: 1280px; margin: auto">
+
+    <div th:replace="~{.common/main.html :: menu}"></div>
+    <div th:replace="~{.common/main.html :: kream}"></div>
+    <div th:replace="~{.common/main.html :: mypage}"></div>
+
+    <div id="">
+        <table style="padding-left: 100px; padding-top: 25px;">
+            <tr>
+                <td>
+                    <h2>관리자님 환영합니다.</h2>
+                    <div style="background-color: black; width: 1000px; height: 2px;" ></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

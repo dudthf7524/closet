@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/mypage.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://kit.fontawesome.com/577d3f36ff.js"
+            crossorigin="anonymous">
+    </script>
+    <style>
+        #mypage{
+            float: left;
+        }
+        #manager{
+            float: left;
+            width: 800px;
+            padding-left : 100px;
+            padding-top : 20px;
+
+        }
+        .list {
+            overflow-y: auto; /* 세로 스크롤바 */
+            overflow-x: auto; /* 가로 스크롤바 추가 */
+            width: 1000px;
+            height: 500px;
+            max-width: 1000px; /* 가로 스크롤바가 나타날 최대 너비 설정 */
+            padding: 10px;
+            border: 1px solid #ddd; /* 외곽선 추가 */
+            border-radius: 5px;
+
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed; /* 테이블 레이아웃을 고정 */
+            border-collapse: collapse; /* 셀 경계선 병합 */
+        }
+
+        th, td {
+            width: 150px; /* 각 셀의 고정 너비 설정 */
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd; /* 하단 경계선 */
+        }
+
+        th {
+            font-weight: bold; /* 헤더 텍스트 굵게 */
+        }
+        .search-box{
+        height: 50px;
+        width: 1000px;
+        background-color: white;
+        border-radius: 40px;
+        padding: 10px;
+        border: 1px solid #f9deec;
+        }
+        .search-txt{
+            border: none;
+            background: none;
+            outline: none;
+            float: left;
+            padding: 0px;
+            color: #797979;
+            font-size: 16px;
+            line-height: 30px;
+            width: 200px;
+        }
+        .search-btn{
+            color: #f9deec;
+            float: right;
+            width: 40px;
+            height: 100%;
+            border-radius: 50%;
+            background-color: white;
+            border: none;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .search-btn:hover{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div style="width: 1280px; margin: auto">
+
+    <div th:replace="~{.common/main.html :: menu}"></div>
+    <div th:replace="~{.common/main.html :: kream}"></div>
+    <div th:replace="~{.common/main.html :: mypage}"></div>
+
+    <div id="manager">
+        <h2>회원목록</h2>
+        <div style="background-color: black; width: 1000px; height: 2px;" ></div>
+        <br>
+        <form class="search-box" action="/manager/member/list" method="get">
+            <input name="membername" class="search-txt" type="text" placeholder="검색어를 입력하세요" th:value="${membername}">
+            <button class="search-btn" type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+        <br>
+        <div class="list">
+            <table>
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>이름</th>
+                    <th>아이디</th>
+                    <th>가입일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="member: ${memberEntityList}">
+                    <td th:text="${member.no}"></td>
+                    <td th:text="${member.membername}"></td>
+                    <td th:text="${member.memberid}"></td>
+                    <td th:text="${member.joinDate}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+     document.addEventListener("DOMContentLoaded", function() {
+    // 현재 페이지의 URL을 가져옴
+    const currentUrl = window.location.pathname;
+
+    // 각 링크의 요소들을 가져옴
+    const memberList = document.getElementById("memberList").querySelector("a");
+    const announcementList = document.getElementById("announcementList").querySelector("a");
+    const announcementWrite = document.getElementById("announcementWrite").querySelector("a");
+
+    // 현재 URL과 각 링크의 href 속성 값을 비교하여 일치하는 링크에 클래스 추가
+    if (currentUrl.includes("/manager/member/list")) {
+        memberList.classList.add("active");
+    } else if (currentUrl.includes("/manager/announcement/list")) {
+        announcementList.classList.add("active");
+    } else if (currentUrl.includes("/manager/announcement/write")) {
+        announcementWrite.classList.add("active");
+    }
+});
+</script>
+
+</body>
+</html>

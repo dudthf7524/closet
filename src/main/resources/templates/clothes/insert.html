@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/nav.css">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        input{
+            padding-top: 15px;
+            padding-bottom: 5px;
+            border-color: rgb(175, 175, 175);
+            border-radius: 10px;
+            width: 400px;
+            border: none;
+        }
+        input[type="text"]:focus,
+        input[type="date"]:focus {
+            outline: 1px solid rgb(175, 175, 175);
+        }
+        .form-wrapper {
+            display: flex;
+            align-items: end; /* 세로 정렬 */
+            justify-content: center;
+            gap: 30px; /* 이미지와 입력 폼 간격 */
+            padding: 20px;
+        }
+        .image-preview {
+            max-width: 300px; /* 이미지 미리보기 최대 너비 */
+            max-height: 300px;
+        }
+
+        input[type=file]::file-selector-button {
+            width: 150px;
+            height: 30px;
+            background: #fff;
+            border: 1px solid rgb(77,77,77);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        input[type=file]::file-selector-button:hover{
+            background: rgb(77,77,77);
+            color: #fff;
+
+        }
+
+        #loginbutton{
+            width: 400px;
+            height: 52px;
+            background-color: black;
+            color: white;
+            border-radius: 10px;
+            border-style: none;
+        }
+        #loginbutton:hover{
+            cursor : pointer;
+        }
+    </style>
+</head>
+<body>
+<div style="width: 1280px; margin: auto">
+    <div th:replace="~{.common/main.html :: menu}"></div>
+    <div th:replace="~{.common/main.html :: kream}"></div>
+    <div th:replace="~{.common/main.html :: nav}"></div>
+    <div class="form-wrapper">
+        <div class="image-upload">
+            <img id="preview-image" class="image-preview" src="https://placehold.co/300" alt="Image Preview">
+            <br>
+            <input type="file" id="imageInput">
+        </div>
+
+        <div class="insertForm">
+            <form name="insertForm">
+               <input name="categorycode" type="hidden" th:value = "${categorycode}" >
+                <input name="clothesfile" type="hidden">
+
+                <table align="center">
+                    <tr>
+                        <td style="height: 50px;"></td>
+                    </tr>
+                    <tr>
+                        <td align="center"><h2 th:text="${category}"></h2></td>
+                    </tr>
+                    <tr>
+                        <td style="height: 25px;"></td>
+                    </tr>
+                    <tr>
+                        <td><input name="name" id="name" type="text" class="custom-input" placeholder="제품명"></td>
+                    </tr>
+                    <tr>
+                        <td style="height: 25px;"></td>
+                    </tr>
+                    <tr>
+                        <td><input name="price" id="price" type="text" class="custom-input" placeholder="가격"></td>
+                    </tr>
+                    <tr>
+                        <td style="height: 25px;"></td>
+                    </tr>
+                    <tr>
+                        <td><input name="purchaseplace" id="purchaseplace" type="text" class="custom-input" placeholder="구매처"></td>
+                    </tr>
+                    <tr>
+                        <td style="height: 25px;"></td>
+                    </tr>
+                    <tr>
+                        <td><input name="buydate" id="buydate" type="date" class="custom-input"></td>
+                    </tr>
+                    <tr>
+                        <td style="height: 25px;"></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" id="loginbutton" onclick="getURL(this)">SAVE</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+    <script>
+        // 이미지 파일 업로드 함수
+    async function getURL() {
+        const fileInput = document.getElementById('imageInput'); // 파일 입력 요소 가져오기
+        const file = fileInput.files[0]; // 첫 번째 파일 가져오기
+
+        // 이미지가 선택된 경우 presigned URL을 요청하고 파일을 업로드
+        if (file) {
+            try {
+                // URL 인코딩된 파일 이름 가져오기
+                let name = encodeURIComponent(file.name);
+
+                // 서버에서 presigned URL 가져오기
+                let result = await fetch('/clothes/presigned-url?filename=' + name);
+                let presignedUrl = await result.text();
+
+                console.log(presignedUrl); // presigned URL 확인
+
+                // presigned URL로 파일 업로드
+                let uploadResult = await fetch(presignedUrl, {
+                    method: 'PUT',
+                    body: file
+                });
+
+                console.log(uploadResult); // 업로드 결과 확인
+
+                if (!uploadResult.ok) {
+                    alert("이미지 업로드 실패!");
+                    return;
+                }
+
+                // 업로드된 파일의 URL 추출
+                let uploadedFileUrl = uploadResult.url.split("?")[0];
+                console.log(uploadedFileUrl);
+
+                // 업로드된 파일 URL을 폼에 설정
+                document.insertForm.clothesfile.value = uploadedFileUrl;
+
+            } catch (error) {
+                console.error("Error uploading file:", error);
+                alert("이미지 업로드 중 오류가 발생했습니다.");
+                return;
+            }
+        }
+
+        // 이미지가 없거나 업로드에 성공한 경우 폼 전송
+        document.insertForm.action = "/clothes/insert";
+        document.insertForm.method = "post";
+        document.insertForm.submit();
+    }
+
+        const containers = document.querySelectorAll('.container');
+
+        containers.forEach(container => {
+            const categoryBox = container.querySelector('.category-box');
+
+            container.addEventListener('mouseenter', () => {
+                categoryBox.classList.add('show'); // ITEM이나 CATEGORY에 마우스를 올리면 리스트 보이기
+            });
+
+            container.addEventListener('mouseleave', () => {
+                categoryBox.classList.remove('show'); // ITEM과 CATEGORY 모두에서 마우스가 나가면 숨기기
+            });
+
+        });
+
+
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                document.getElementById('preview-image').src = e.target.result; // 이미지 src 업데이트
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

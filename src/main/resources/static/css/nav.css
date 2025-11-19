@@ -1,0 +1,77 @@
+.wrapper {
+    display: flex; /* 여러 개의 container를 좌우로 정렬 */
+    gap: 20px; /* container 간의 간격 추가 */
+    padding: 20px; /* wrapper의 전체 여백 설정 */
+}
+.container {
+    display: inline-block; /* ITEM과 CATEGORY를 수평 정렬 */
+    position: relative; /* CATEGORY의 위치를 조정하기 위해 relative 설정 */
+    padding-left: 100px;
+    padding-top: 20px;
+}
+.item {
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    margin: 0; /* ITEM과 CATEGORY 사이 간격 제거 */
+    text-align: left; /* ITEM을 왼쪽 정렬 */
+    display: inline-block; /* 밑줄 애니메이션을 적용하기 위해 inline-block으로 설정 */
+    position: relative;
+    width: 100px; /* 밑줄 애니메이션 위치 설정을 위한 relative 설정 */
+}
+.item::after {
+    content: ''; /* 가상 요소 생성 */
+    position: absolute; /* ITEM의 위치를 기준으로 절대 위치 설정 */
+    width: 100%; /* 밑줄이 ITEM 전체 너비를 차지하도록 설정 */
+    height: 2px; /* 밑줄의 두께를 설정 */
+    bottom: 0; /* ITEM 텍스트 아래에 위치 */
+    left: 0; /* 왼쪽 정렬 */
+    background-color: black; /* 밑줄의 색상 설정 */
+    transform: scaleX(0); /* 애니메이션 시작 시 밑줄을 0으로 설정 */
+    transition: transform 0.3s ease; /* 애니메이션 속도와 효과 설정 */
+}
+.item:hover::after,
+.container:hover .item::after {
+    transform: scaleX(1); /* 마우스를 올렸을 때 밑줄이 늘어나도록 설정 */
+}
+.category-box {
+    position: absolute; /* ITEM 바로 아래에 CATEGORY가 위치하도록 */
+    top: 100%; /* ITEM 바로 아래에 위치 */
+    left: 0; /* 왼쪽 정렬 */
+    display: none; /* 처음에 항목 숨기기 */
+    padding: 5px 0; /* 박스 안의 여백 */
+    z-index: 1; /* CATEGORY가 위에 표시되도록 설정 */
+    width: 100%; /* 부모 요소의 너비에 맞춤 */
+    padding-left: 100px;
+}
+.category {
+    padding: 0; /* CATEGORY 리스트의 기본 여백 제거 */
+    margin: 0; /* CATEGORY의 기본 간격 제거 */
+    list-style: none; /* 기본 리스트 스타일 제거 */
+    text-align: left; /* CATEGORY를 왼쪽 정렬 */
+    cursor: default; /* 기본 커서는 화살표 모양 */
+}
+.category li {
+    padding-top: 10px; /* 리스트 항목에 약간의 여백 추가 */
+    cursor: pointer; /* li 항목에만 손가락 모양 커서 */
+    position: relative; /* 밑줄 애니메이션을 위한 상대 위치 설정 */
+}
+.category li::after {
+    content: ''; /* 가상 요소 생성 */
+    position: absolute; /* li 요소 기준 절대 위치 설정 */
+    width: 100%; /* 밑줄의 너비를 li 요소에 맞춤 */
+    height: 2px; /* 밑줄의 두께 설정 */
+    bottom: 0; /* li 요소의 텍스트 바로 아래에 위치 */
+    left: 0; /* 왼쪽 정렬 */
+    background-color: black; /* 밑줄의 색상 설정 */
+    transform: scaleX(0); /* 초기 상태에서 밑줄을 숨김 */
+    transition: transform 0.3s ease; /* 밑줄 애니메이션 효과와 속도 설정 */
+}
+.category li:hover::after {
+    transform: scaleX(1); /* 마우스를 올렸을 때 밑줄이 늘어나도록 설정 */
+}
+.show {
+    display: block; /* 항목을 표시하기 위한 클래스 */
+}
+a{
+    text-decoration: none;
+    color: black;
+}
